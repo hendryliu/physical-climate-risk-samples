@@ -33,8 +33,14 @@ asset carries 0.64% of TIV against a 0.119% portfolio average.
 The division of labour between the two engines is explicit. **CLIMADA computes the
 ground-up loss** — hazard → vulnerability → a per-asset, per-event impact matrix.
 **OasisLMF supplies the financial structure**: `generate_oasis_files()` is run for real
-against OED exposure, and the resulting binaries are parsed back to confirm OasisLMF
-derived the intended 2%-of-TIV site deductible across all 20 locations.
+against OED exposure, and the resulting binaries are parsed back to recover the
+deductible schedule OasisLMF derived from `LocDed6All`.
+
+That yields a cross-check with something at stake. Sections 8 and 8a reach the
+deductible schedule by independent routes — one straight from the exposure table, the
+other by parsing `fm_profile.bin` and `fm_policytc.bin` — and both return a gross AAL
+of **US$ 3,362,686**, agreeing to zero. A mismatch would have meant the OED terms or
+the aggregation-ID ordering was wrong.
 
 The Oasis *loss kernel* is deliberately not run. It requires vendor model files
 (footprint, vulnerability, damage-bin dictionary) for which CLIMADA is the substitute

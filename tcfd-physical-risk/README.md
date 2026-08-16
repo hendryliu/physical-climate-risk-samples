@@ -18,8 +18,11 @@ results.
 - OEP / AEP exceedance-curve construction, and the difference between the two
 - Per-asset AAL attribution — showing siting, not value, drives the concentration
 - OasisLMF `generate_oasis_files()` producing the binary input set from OED exposure,
-  and the generated `fm_profile` / `fm_policytc` binaries parsed back to verify the
+  and the generated `fm_profile` / `fm_policytc` binaries parsed back to recover the
   deductible hierarchy OasisLMF derived from `LocDed6All`
+- A cross-check with something at stake: sections 8 and 8a reach that schedule by
+  independent routes and agree exactly (gross AAL US$ 3,362,686 both ways). A mismatch
+  would have exposed wrong OED terms or a bad aggregation-ID ordering
 - A clear split of responsibilities: CLIMADA computes ground-up loss; OasisLMF
   represents the financial structure. The Oasis loss kernel is not run — it needs
   vendor model files that CLIMADA stands in for here, and section 8a says so
