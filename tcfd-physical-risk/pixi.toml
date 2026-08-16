@@ -1,0 +1,22 @@
+[workspace]
+name = "tcfd-physical-risk"
+version = "0.1.0"
+description = "Sample TCFD physical risk assessment using CLIMADA + OasisLMF"
+channels = ["conda-forge"]
+platforms = ["osx-64"]
+
+[dependencies]
+python = ">=3.10,<3.13"
+climada = ">=6"
+numpy = ">=1.26"
+pandas = "*"
+scipy = ">=1.13"
+matplotlib = ">=3.9"
+plotly = ">=5.20"
+jupyterlab = ">=4"
+ipykernel = ">=6"
+nbformat = ">=5"
+nbclient = ">=0"
+
+[pypi-dependencies]
+oasislmf = "*"

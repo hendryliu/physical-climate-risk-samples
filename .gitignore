@@ -1,0 +1,8 @@
+.pixi/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+*.log
+log/
+oasis_demo/oasis_files/

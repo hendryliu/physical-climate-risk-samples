@@ -1,0 +1,6 @@
+PortNumber,AccNumber,PolNumber,AccDed6All,AccLimit6All,AccCurrency,PolPerilsCovered,PolInceptionDate,PolExpiryDate,LayerParticipation,LayerLimit,LayerAttachment
+1,SREIT-01,POL-01,0,0,USD,WW1,2024-01-01,2024-12-31,1.0,0,0
+1,SREIT-02,POL-02,0,0,USD,WW1,2024-01-01,2024-12-31,1.0,0,0
+1,SREIT-03,POL-03,0,0,USD,WW1,2024-01-01,2024-12-31,1.0,0,0
+1,SREIT-04,POL-04,0,0,USD,WW1,2024-01-01,2024-12-31,1.0,0,0
+1,SREIT-05,POL-05,0,0,USD,WW1,2024-01-01,2024-12-31,1.0,0,0
