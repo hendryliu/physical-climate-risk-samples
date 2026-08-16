@@ -17,8 +17,12 @@ results.
 - CLIMADA impact computation on OED-schema exposure, with JRC depth–damage functions
 - OEP / AEP exceedance-curve construction, and the difference between the two
 - Per-asset AAL attribution — showing siting, not value, drives the concentration
-- OasisLMF `generate_oasis_files()` producing the full binary input set from OED,
-  with the financial-module AAL reconciled against the analytical calculation
+- OasisLMF `generate_oasis_files()` producing the binary input set from OED exposure,
+  and the generated `fm_profile` / `fm_policytc` binaries parsed back to verify the
+  deductible hierarchy OasisLMF derived from `LocDed6All`
+- A clear split of responsibilities: CLIMADA computes ground-up loss; OasisLMF
+  represents the financial structure. The Oasis loss kernel is not run — it needs
+  vendor model files that CLIMADA stands in for here, and section 8a says so
 - Deductible and excess-of-loss treaty structures (ground-up / gross / ceded / net)
 
 ## Results

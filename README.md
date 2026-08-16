@@ -30,9 +30,15 @@ across three climate scenarios, from exposure through to disclosure-ready metric
 per-asset breakdown shows the driver is siting rather than value — the highest-AAL
 asset carries 0.64% of TIV against a 0.119% portfolio average.
 
-The OasisLMF financial module is run for real, not simulated: `generate_oasis_files()`
-produces the full binary input set from OED exposure, and the resulting AAL reconciles
-to the analytical calculation exactly (US$ 7,329,554 both ways).
+The division of labour between the two engines is explicit. **CLIMADA computes the
+ground-up loss** — hazard → vulnerability → a per-asset, per-event impact matrix.
+**OasisLMF supplies the financial structure**: `generate_oasis_files()` is run for real
+against OED exposure, and the resulting binaries are parsed back to confirm OasisLMF
+derived the intended 2%-of-TIV site deductible across all 20 locations.
+
+The Oasis *loss kernel* is deliberately not run. It requires vendor model files
+(footprint, vulnerability, damage-bin dictionary) for which CLIMADA is the substitute
+here — section 8a states this and explains the trade-off.
 
 Covers: OED-format exposure · CLIMADA hazard, vulnerability and `ImpactCalc` ·
 JRC depth–damage functions · OEP/AEP exceedance curves · deductible and XL treaty
