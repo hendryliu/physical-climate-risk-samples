@@ -42,13 +42,31 @@ other by parsing `fm_profile.bin` and `fm_policytc.bin` — and both return a gr
 of **US$ 3,362,686**, agreeing to zero. A mismatch would have meant the OED terms or
 the aggregation-ID ordering was wrong.
 
-The Oasis *loss kernel* is deliberately not run. It requires vendor model files
-(footprint, vulnerability, damage-bin dictionary) for which CLIMADA is the substitute
-here — section 8a states this and explains the trade-off.
+Section 8b then runs the Oasis **loss kernel** itself. That normally needs vendor
+model files — footprint, vulnerability, damage-bin dictionary, occurrence — which
+`generate_oasis_files()` does not produce, so `oasis_model_builder.py` derives all of
+them from the same CLIMADA hazard and depth–damage curve, and OasisLMF's own
+`evepy → modelpy → gulpy → summarypy → eltpy` runs over them.
+
+That makes the two engines directly comparable. Oasis returns a ground-up AAL of
+**US$ 7,389,544** against CLIMADA's **US$ 7,329,554** — 0.82% apart. Rather than
+attribute the gap to rounding and move on, the notebook reconstructs Oasis's binning
+in NumPy and reproduces the kernel's figure **to the dollar**, which is what
+establishes the residual as intensity discretisation and not a modelling error. The
+residual narrows as bins refine but not monotonically, and the notebook reports that
+instead of quoting the resolution that flatters it.
+
+The reason for building two vulnerability treatments is the result they expose:
+**AAL is blind to the assumption that drives the tail.** Point-mass and
+Beta-distributed damage return the same AAL to the dollar, yet the 99.9th-percentile
+event loss differs by 72% and the largest sampled loss by 2.7x. Two models agreeing
+on the headline number would size a reinsurance layer or a capital buffer very
+differently.
 
 Covers: OED-format exposure · CLIMADA hazard, vulnerability and `ImpactCalc` ·
 JRC depth–damage functions · OEP/AEP exceedance curves · deductible and XL treaty
-structures · TCFD / ISSB S2 disclosure framing.
+structures · Oasis model-file construction and kernel execution · two-engine
+reconciliation · TCFD / ISSB S2 disclosure framing.
 
 ---
 

@@ -23,10 +23,22 @@ results.
 - A cross-check with something at stake: sections 8 and 8a reach that schedule by
   independent routes and agree exactly (gross AAL US$ 3,362,686 both ways). A mismatch
   would have exposed wrong OED terms or a bad aggregation-ID ordering
-- A clear split of responsibilities: CLIMADA computes ground-up loss; OasisLMF
-  represents the financial structure. The Oasis loss kernel is not run — it needs
-  vendor model files that CLIMADA stands in for here, and section 8a says so
 - Deductible and excess-of-loss treaty structures (ground-up / gross / ceded / net)
+- **Section 8b — building the missing Oasis model files and running the real loss
+  kernel.** `generate_oasis_files()` yields only the exposure side of an Oasis run;
+  the model side (`footprint`, `vulnerability`, `damage_bin_dict`, `occurrence`,
+  `events`) ships from the vendor. `oasis_model_builder.py` derives all five from
+  the same CLIMADA hazard and depth–damage curve, then runs OasisLMF's own
+  `evepy → modelpy → gulpy → summarypy → eltpy` over them
+- A two-engine reconciliation where the residual is explained rather than waved at:
+  Oasis returns a ground-up AAL 0.82% above CLIMADA, and a NumPy reconstruction of
+  the binning predicts the kernel's figure **to the dollar**, pinning the gap on
+  intensity discretisation. The residual narrows as bins refine but not
+  monotonically, and the notebook says so instead of quoting the best resolution
+- The finding that motivates building two vulnerability options: **AAL cannot see
+  the assumption that drives the tail.** Point-mass and Beta-distributed damage
+  give the same AAL to the dollar, while the 99.9th-percentile event loss differs
+  by 72% and the largest sampled loss by 2.7x
 
 ## Results
 
@@ -35,6 +47,28 @@ results.
 | Current | US$ 7,329,554 | 0.119% | US$ 19.4 M | US$ 53.5 M |
 | +2 °C (SSP2-4.5, ~2050) | US$ 9,639,619 | 0.156% | US$ 22.6 M | US$ 60.2 M |
 | +4 °C (SSP5-8.5, ~2100) | US$ 13,255,459 | 0.215% | US$ 32.0 M | US$ 67.8 M |
+
+### Section 8b — Oasis kernel vs CLIMADA (current climate, ground-up)
+
+| engine | AAL | vs CLIMADA |
+|---|---|---|
+| CLIMADA `ImpactCalc` | US$ 7,329,554 | — |
+| Oasis kernel, point-mass damage | US$ 7,389,544 | +0.818% |
+| Oasis kernel, Beta damage (cv 0.4) | US$ 7,389,543 | +0.818% |
+
+A NumPy reconstruction of the binning reproduces the kernel's US$ 7,389,543.75
+exactly (difference US$ 0.00), which is what identifies the residual as
+intensity-bin discretisation rather than a modelling discrepancy.
+
+Same models, sampled 1,000 times — where the two vulnerability assumptions part:
+
+| | point-mass | Beta | ratio |
+|---|---|---|---|
+| AAL (analytical) | US$ 7,389,544 | US$ 7,389,543 | 1.00x |
+| event loss SD | US$ 105,113 | US$ 4,627,697 | 44x |
+| event loss p99 | US$ 53.8 M | US$ 66.2 M | 1.23x |
+| event loss p99.9 | US$ 54.0 M | US$ 93.0 M | 1.72x |
+| largest sampled loss | US$ 54.0 M | US$ 145.4 M | 2.69x |
 
 ---
 
@@ -65,6 +99,7 @@ pixi run jupyter nbconvert --to notebook --execute tcfd_physical_risk_assessment
 ```
 tcfd-physical-risk/
 ├── tcfd_physical_risk_assessment.ipynb   # the deliverable
+├── oasis_model_builder.py                # builds the Oasis model files (§8b)
 ├── data/
 │   └── exposure_sreit.csv                # 20-asset synthetic exposure
 ├── oasis_demo/
@@ -75,6 +110,14 @@ tcfd-physical-risk/
 ```
 
 `oasis_demo/oasis_files/` is not committed — it is generated when you run section 8a.
+`oasis_runs/` likewise: section 8b writes a full Oasis run directory per
+vulnerability option. Run the notebook in order, since 8b reuses the item,
+coverage and financial-module binaries 8a produced.
+
+> **macOS note.** `summarypy` writes through `select()` and raises on any
+> exceptional file descriptor; macOS reports *regular files* as exceptional, so it
+> can only write to a pipe there. `run_kernel()` routes it via `/dev/stdout`
+> for that reason.
 
 ---
 
